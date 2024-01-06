@@ -1,0 +1,116 @@
+---
+title: "R pivot_longer() and Python melt()"
+subtitle: "Reshaping a DataFrame from wide to long format"
+format: html
+editor: visual
+author: "Inma using Quarto"
+date: "2024-01-06"
+keywords: "R, Python, DataFrame, pivoting, reshaping"
+---
+
+## What does pivot_longer() do? :
+
+-   Reshapes data from a wide format to a longer format.
+
+-   Transforms multiple columns representing different variables into two key-value columns:
+
+    -   **Key column:** Holds the names of the original variables.
+
+    -   **Value column:** Contains the corresponding values from those variables.
+
+## Arguments:
+
+-   `data`: The data frame to be reshaped.
+
+-   `cols`: The columns to be pivoted into longer format (can be specified by name or position).
+
+-   `names_to`: The name of the new key column containing the original variable names.
+
+-   `values_to`: The name of the new value column containing the corresponding values.
+
+## A simple example:
+
+Loading the necessary libraries: The `pivot_longer()` function is accessed from the `tidyr` package, which is part of the tidyverse suite. 
+
+```{r, echo=TRUE, message=FALSE, warning=FALSE}
+library(tidyverse)
+```
+
+We create a mock dataset:
+
+```{r, echo=TRUE, message=FALSE, warning=FALSE}
+# Create a dataframe with 10 rows and 6 columns
+clothes <- data.frame(
+  item = c("t-shirts", "jackets", "hoodies", "jeans", "shorts", "dresses", "skirts", "scarfs", "leggings", "gloves"),
+  price = c(10.05, 24.50, 39.90, 44.95, 9.90, 29.95, 17.25, 8.45, 12.99, 7.55),
+  pink = c(2,6,3,4,2,5,2,0,2,8),
+  blue = c(3,4,3,5,2,0,2,6,3,1),
+  yellow = c(1,5,8,5,8,4,2,5,2,0)  
+ )
+```
+
+We print our dataframe:
+
+```{r, echo=TRUE, message=FALSE, warning=FALSE}
+# Printing clothes
+print(clothes)
+```
+
+We apply the pivot_longer function to our clothes data-frame, choosing the columns 3,4 and 5 to be pivoted into a column named "colors" and the values to the column named quantities:
+
+```{r}
+clothes_long <- pivot_longer(clothes,
+                             3:5,
+                             names_to = "colors",
+                             values_to = "quantities")
+```
+
+We print the pivoted version of our data:
+
+```{r}
+# Printing clothes_long
+print(clothes_long)
+```
+
+See the [pivot_longer documentation](https://search.r-project.org/CRAN/refmans/tidyr/html/pivot_longer.html) for more details.
+
+# Equivalente en Python
+
+Venga, este trozo lo hacemos en español.
+
+## ¿Qué hace la funcion melt() de Pandas? :
+
+-   Lo mismo que la funcion pivot_longer() de `tidyr`
+
+## Usaremos el mismo ejemplo:
+
+Creamos el DataFrame, después de importar Pandas:
+
+```{python}
+import pandas as pd
+ropas = pd.DataFrame({
+    "articulo": ["camisetas", "chaquetas", "sudaderas", "pantalones", "bermudas", "vestidos", "faldas", "bufandas", "mallas", "guantes"],
+    "precio": [10.05, 24.50, 39.90, 44.95, 9.90, 29.95, 17.25, 8.45, 12.99, 7.55],
+    "rosa": [2, 6, 3, 4, 2, 5, 2, 0, 2, 8],
+    "azul": [3, 4, 3, 5, 2, 0, 2, 6, 3, 1],
+    "amarillo": [1, 5, 8, 5, 8, 4, 2, 5, 2, 0]
+})
+
+print(ropas)
+```
+
+Y le damos la vuelta a las columnas de los colores:
+
+```{python}
+# Pivot longer using melt
+ropas_larga = pd.melt(ropas, id_vars=['articulo', 'precio'],
+                    value_vars=['rosa', 'azul', 'amarillo'],
+                    var_name='cantidad', 
+                    value_name='colores')
+
+print(ropas_larga)
+```
+
+Aunque nos lo ha ordenado por colores en vez de por artículo. Pero bueno, nos vale así ¿verdad?
+
+Te puedes bajar este documento en formato Quarto en [mi GitHub](https://github.com/)
